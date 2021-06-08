@@ -1,9 +1,8 @@
 #include <iostream>
 #include "windows.h"
 
-#include "terminal.h"
-#include "golgrid.h"
-#include "grid.h"
+#include "../../src/terminal.h"
+#include "../../src/grid.h"
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow)
 {
@@ -32,26 +31,60 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 
     ///////////////////
 
-    GOLGrid g;
-    g.loadGrid("assets/gol.txt");
-    /*g.displayGrid();
-    g.generateNextGrid();
-    g.displayGrid();
-    g.generateNextGrid();
-    g.displayGrid();
-    g.generateNextGrid();*/
-
+    Grid g;
+    g.loadGrid("../assets/gol.txt");
     int epoch = 0;
-    while(1){
+    g.displayGrid();
+    g.generateNextGrid();
+
+    g.displayGrid();
+    g.generateNextGrid();
+    system("pause");
+
+    std::cout << "WIDTH ++" << std::endl;
+    g.setWidth(30);
+    g.displayGrid();
+    g.generateNextGrid();
+    g.displayGrid();
+    g.generateNextGrid();
+    system("pause");
+
+    std::cout << "HEIGHT ++" << std::endl;
+    g.setHeight(30);
+    g.displayGrid();
+    g.generateNextGrid();
+    g.displayGrid();
+    g.generateNextGrid();
+    system("pause");
+
+    std::cout << "HEIGHT --" << std::endl;
+    g.setHeight(3);
+    g.displayGrid();
+    g.generateNextGrid();
+    g.displayGrid();
+    g.generateNextGrid();
+    system("pause");
+
+
+    std::cout << "WIDTH --" << std::endl;
+    g.setWidth(3);
+    g.displayGrid();
+    g.generateNextGrid();
+    g.displayGrid();
+    g.generateNextGrid();
+    system("pause");
+
+
+    /*while(1){
         g.displayGrid();
         g.generateNextGrid();
         std::cout << " Epoch : " << epoch++;
         std::cout << std::endl;
         std::cout << " Ctrl + C to EXIT " ;
-        //system("pause");
         for(int i=0;i<100000000;i++);
         system("cls");
-    }
+    }*/
+        
     
     system("pause");
     return 0;

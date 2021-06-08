@@ -1,6 +1,11 @@
+#ifndef GRID_H
+#define GRID_H
+
 #include <iostream>
 #include <vector>
 #include <fstream>
+
+#define BLOCK 219
 
 class Grid {
 public:
@@ -9,32 +14,32 @@ public:
     Grid(std::vector<std::vector<bool>> values): _currentValues(values), _width(values[0].size()), _height(values.size()){}
     Grid(const Grid& grid) {
         _currentValues = grid.cloneValues();
-        _width = _currentValues[0].size();
+        _width  = _currentValues[0].size();
         _height = _currentValues.size();
     }
 
     unsigned getWidth() const  {return _width;}
     unsigned getHeight() const {return _height;}
 
-    char _readBlock = '#';
-    char _displayBlock = 219;
-    bool loadGrid(std::string filename);
-    
-    std::vector<bool> getNeighboors(unsigned x, unsigned y){};
+    void setWidth(unsigned newWidth);
+    void setHeight(unsigned newHeight);
+
+    bool loadGrid(std::string filename, char readBlock = '#');
 
     std::vector<std::vector<bool>> cloneValues() const;
 
-    void generateNextGrid();
+    virtual void generateNextGrid();
 
-    void displayGrid(char block = 219);
+    void displayGrid(char block = BLOCK);
 
     std::vector<std::vector<bool>> _currentValues;
     std::vector<std::vector<bool>> _previousValues;
+    
 private:
-
     unsigned _width;
     unsigned _height;
     unsigned _charWidth = 10;
     unsigned _charHeight = 18;
-    char BLOCK = 219;
 };
+
+#endif // GRID_H

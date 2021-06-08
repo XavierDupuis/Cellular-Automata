@@ -1,6 +1,39 @@
 #include "grid.h"
 
-bool Grid::loadGrid(std::string filename){
+void Grid::setWidth(unsigned newWidth) {
+    if (newWidth > _width){
+        for(unsigned i = 0; i < _height; i++){
+            for(unsigned j = _width; j < newWidth; j++){
+                _currentValues.at(i).push_back(false);
+            }
+        }
+    }
+    else if(newWidth < _width){
+        for(unsigned i = 0; i < _height; i++){
+            for(unsigned j = newWidth; j < _width; j++){
+                _currentValues.at(i).pop_back();
+            }
+        }
+    }
+    _width = newWidth;
+}
+
+void Grid::setHeight(unsigned newHeight) {
+    if (newHeight > _height){
+        for(unsigned i = _height; i < newHeight; i++){
+            _currentValues.push_back(std::vector<bool>(_width, false));
+        }
+    }
+    else if(newHeight < _height){
+        for(unsigned i = newHeight; i < _height; i++){
+            _currentValues.pop_back();
+        }
+    }
+    _height = newHeight;
+}
+
+
+bool Grid::loadGrid(std::string filename, char readBlock){
     std::ifstream f(filename);
     if(!f)
     {
@@ -13,7 +46,7 @@ bool Grid::loadGrid(std::string filename){
     nextChar = f.get();
     do{
         width++;
-        line.push_back(nextChar == _readBlock);
+        line.push_back(nextChar == readBlock);
         nextChar = f.get();
     } while(nextChar != '\n');
     _width = width;
@@ -22,18 +55,11 @@ bool Grid::loadGrid(std::string filename){
         line.clear();
         for(unsigned i = 0; i < _width; i++){
             nextChar = f.get();
-            line.push_back(nextChar == _readBlock);
+            line.push_back(nextChar == readBlock);
         }
         _currentValues.push_back(line);
     }
     _height = _currentValues.size();
-    /*std::cout << " CURRENT VALUES " << std::endl;
-    for(unsigned i = 0; i < _height; i++){
-        for(unsigned j = 0; j < _width; j++){
-            std::cout << _currentValues[i][j];
-        }
-        std::cout << std::endl;
-    }*/
     f.close();
     return true;
 }
@@ -48,10 +74,8 @@ std::vector<std::vector<bool>> Grid::cloneValues() const{
 
 void Grid::generateNextGrid() {
     _previousValues = cloneValues();
-
     for(unsigned i = 0; i < getHeight(); i++){
         for(unsigned j = 0; j < getWidth(); j++){
-            // BASIC BEHAVIOR 
             if(_previousValues[i][j] == false){
                 _currentValues.at(i).at(j) = true;
             }
@@ -70,4 +94,5 @@ void Grid::displayGrid(char block) {
         }
         std::cout << std::endl;
     }
+    std::cout << std::endl;
 }
