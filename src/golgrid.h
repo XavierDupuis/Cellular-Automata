@@ -1,3 +1,13 @@
+/**
+ * @file golgrid.h
+ * @brief based on Conway's Game of Life
+ *        https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+ * @version 0.1
+ * @date 2021-06-09
+ * 
+ * @copyright Copyright (c) 2021
+ */
+
 #ifndef GOLGRID_H
 #define GOLGRID_H
 
@@ -6,20 +16,9 @@
 class GOLGrid: public Grid{
 public:
    unsigned getAliveNeighboors(unsigned x, unsigned y){
-       //std::cout << "H : " << getHeight() << ", W : " << getWidth() << std::endl;
-       /*return _previousValues.at((y + 1 + getHeight())%getHeight()).at((x - 1 + getWidth())%getWidth()) + 
-              _previousValues.at((y + 1 + getHeight())%getHeight()).at((x + getWidth())%getWidth()) + 
-              _previousValues.at((y + 1 + getHeight())%getHeight()).at((x + 1 + getWidth())%getWidth()) + 
-              _previousValues.at((y + getHeight())%getHeight()).at((x + 1 + getWidth())%getWidth()) + 
-              _previousValues.at((y + getHeight())%getHeight()).at((x - 1 + getWidth())%getWidth()) + 
-              _previousValues.at((y - 1 + getHeight())%getHeight()).at((x - 1 + getWidth())%getWidth()) + 
-              _previousValues.at((y - 1 + getHeight())%getHeight()).at((x + getWidth())%getWidth()) + 
-              _previousValues.at((y - 1 + getHeight())%getHeight()).at((x + 1 + getWidth())%getWidth()) ;
-        */
         unsigned sum = 0;
         for(int i = -1; i < 2; i++){
             for(int j = -1; j < 2; j++){
-                //std::cout << "X : " << x << ", Y : " << y << std::endl;
                 sum += _previousValues.at((y + j + getHeight())%getHeight()).at((x + i + getWidth())%getWidth()); 
             }
         }

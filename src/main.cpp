@@ -24,7 +24,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
     int epoch = 0;
     while(1){
         GetWindowRect(console, &ConsoleRect);
-        //MoveWindow(console, ConsoleRect.left, ConsoleRect.top, 16*g.getWidth()+60, 16*g.getHeight()+75+50, FALSE);
         if(ConsoleRect.right-ConsoleRect.left != consoleWidth){
             consoleWidth = ConsoleRect.right-ConsoleRect.left;
             g.setWidth((consoleWidth-60)/16);
@@ -33,19 +32,12 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
             consoleHeight = ConsoleRect.bottom-ConsoleRect.top;
             g.setHeight((consoleHeight-75-50)/16);
         }
-        /*std::cout << " WIDTH  : " << ConsoleRect.right - ConsoleRect.left << "  |  "
-                  << " HEIGHT : " << ConsoleRect.bottom - ConsoleRect.top << std::endl;
-        
-        std::cout << " GWIDTH  : " << g.getWidth() << "  |  "
-                  << " GHEIGHT : " << g.getHeight() << std::endl;*/
 
         g.displayGrid();
         g.generateNextGrid();
         std::cout << " Epoch : " << epoch++;
         std::cout << std::endl;
         std::cout << " Ctrl + C to EXIT " ;
-        //system("pause");
-        //for(int i=0;i<1000000;i++);
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
         system("cls");
     }
