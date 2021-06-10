@@ -1,5 +1,7 @@
 #include <iostream>
 #include "windows.h"
+#include <chrono>
+#include <thread>
 
 #include "terminal.h"
 #include "golgrid.h"
@@ -7,49 +9,44 @@
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow)
 {
+    GOLGrid g;
+    g.loadGrid("assets/gol2.txt");
+
     HWND console = GetConsoleWindow();
     RECT ConsoleRect;
-    double charWidth = 10;
-    double charHeight = 18;
-    unsigned nWidth = 50, nHeight = 25;
- 
+    unsigned consoleWidth = 16*g.getWidth()+60;
+    unsigned consoleHeight = 16*g.getHeight()+75+50;
+
     GetWindowRect(console, &ConsoleRect);
-    //MoveWindow(console, ConsoleRect.left, ConsoleRect.top, nWidth*charWidth, (nHeight+8)*charHeight, FALSE);
-    std::cout << " TEST " << std::endl;
-    
-    std::cout << " T : " << ConsoleRect.top << std::endl 
-              << " B : " << ConsoleRect.bottom << std::endl 
-              << " L : " << ConsoleRect.left << std::endl 
-              << " R : " << ConsoleRect.right << std::endl
-              << " WIDTH  : " << ConsoleRect.right - ConsoleRect.left << std::endl
-              << " HEIGHT : " << ConsoleRect.bottom - ConsoleRect.top << std::endl;
-    for(int i = 0; i < nHeight; i++) {
-        for(int j = 0; j < nWidth; j++) {
-            std::cout << char(BLOCK);
-        }
-        std::cout << std::endl;
-    }
+    MoveWindow(console, ConsoleRect.left, ConsoleRect.top, consoleWidth, consoleHeight, FALSE);
 
-    ///////////////////
-
-    GOLGrid g;
-    g.loadGrid("assets/gol.txt");
-    /*g.displayGrid();
-    g.generateNextGrid();
-    g.displayGrid();
-    g.generateNextGrid();
-    g.displayGrid();
-    g.generateNextGrid();*/
 
     int epoch = 0;
     while(1){
+        GetWindowRect(console, &ConsoleRect);
+        //MoveWindow(console, ConsoleRect.left, ConsoleRect.top, 16*g.getWidth()+60, 16*g.getHeight()+75+50, FALSE);
+        if(ConsoleRect.right-ConsoleRect.left != consoleWidth){
+            consoleWidth = ConsoleRect.right-ConsoleRect.left;
+            g.setWidth((consoleWidth-60)/16);
+        }
+        if(ConsoleRect.bottom-ConsoleRect.top != consoleHeight){
+            consoleHeight = ConsoleRect.bottom-ConsoleRect.top;
+            g.setHeight((consoleHeight-75-50)/16);
+        }
+        /*std::cout << " WIDTH  : " << ConsoleRect.right - ConsoleRect.left << "  |  "
+                  << " HEIGHT : " << ConsoleRect.bottom - ConsoleRect.top << std::endl;
+        
+        std::cout << " GWIDTH  : " << g.getWidth() << "  |  "
+                  << " GHEIGHT : " << g.getHeight() << std::endl;*/
+
         g.displayGrid();
         g.generateNextGrid();
         std::cout << " Epoch : " << epoch++;
         std::cout << std::endl;
         std::cout << " Ctrl + C to EXIT " ;
         //system("pause");
-        for(int i=0;i<100000000;i++);
+        //for(int i=0;i<1000000;i++);
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
         system("cls");
     }
     

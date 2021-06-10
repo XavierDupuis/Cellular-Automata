@@ -87,12 +87,27 @@ void Grid::generateNextGrid() {
 }
 
 void Grid::displayGrid(char block) {
+    std::cout << char(218);
+    for(unsigned i = 0; i < getWidth(); i++){
+        std::cout << char(196) << char(196);
+    }
+    std::cout << char(191);
+    std::cout << std::endl;
+
     for(unsigned i = 0; i < getHeight(); i++){
+        std::cout << char(179);
         for(unsigned j = 0; j < getWidth(); j++){
             char newBlock = (_currentValues[i][j]) ? block : ' ';
-            std::cout << newBlock;
+            std::cout << newBlock << newBlock;
         }
+        std::cout << char(179);
         std::cout << std::endl;
     }
+
+    std::cout << char(192);
+    for(unsigned i = 0; i < getWidth(); i++){
+        std::cout << char(196) << char(196);
+    }
+    std::cout << char(217);
     std::cout << std::endl;
 }
