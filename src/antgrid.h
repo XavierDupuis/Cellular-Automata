@@ -15,8 +15,17 @@
 
 class ANTGrid: public Grid{
 public:
-    std::pair<unsigned, unsigned> currentCell = {11,7};
-    std::pair<unsigned, unsigned> nextCell = {11,6};
+    std::pair<unsigned, unsigned> _currentCell = {0,0};
+    std::vector<std::pair<unsigned, unsigned>> _directions = 
+        { {0,1}, {1,0}, {0,-1}, {-1,0} };
+    enum direction {UP,RIGHT,DOWN,LEFT};
+    direction _direction = DOWN;
+
+    bool loadGrid(std::string filename, char readBlock = '#'){
+        bool isLoaded = Grid::loadGrid(filename, readBlock);
+        _currentCell = {getWidth()/2,getHeight()/2};
+        return isLoaded;
+    }
 
     bool getCellState(unsigned x, unsigned y){
         return _previousValues.at(y).at(x);
@@ -28,10 +37,13 @@ public:
 
     void generateNextGrid(){
         _previousValues = cloneValues();
-        currentCell = nextCell;
-        /*nextCell = (getCellState(currentCell)) ? 
-            {currentCell.first, currentCell.first} :
-            {currentCell.first, currentCell.first};*/
+        _direction = ( getCellState(_currentCell) ) ? 
+            direction((_direction + 1 + 4) % 4) : 
+            direction((_direction - 1 + 4) % 4);
+        _currentValues.at(_currentCell.second).at(_currentCell.first) = 
+            !getCellState(_currentCell);
+        _currentCell = {(_currentCell.first  + _directions[_direction].first + getWidth()) %  getWidth(),
+                        (_currentCell.second + _directions[_direction].second + getHeight()) %  getHeight()};
     }
 };
 
