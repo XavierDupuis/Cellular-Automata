@@ -14,7 +14,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
     SetConsoleTitle((LPCTSTR)("Cellular Automata"));
     SetConsoleTextAttribute(console, 0xFFFF);
 
-    ANTGrid g;
+    Grid* g;
     unsigned option = 0;
     while(!option){
         std::cout << " 1) Conway's Game of Life" << std::endl
@@ -23,9 +23,11 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
         std::cin >> option;
         switch (option)
         {
-        case 1: g.loadGrid("assets/gol2.txt");
+        case 1: g = new GOLGrid;
+                g->loadGrid("assets/gol.txt");
                 break;
-        case 2: g.loadGrid("assets/ant.txt");
+        case 2: g = new ANTGrid;
+                g->loadGrid("assets/ant.txt");
                 break;
         default:
                 break;
@@ -35,10 +37,20 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
     std::cout << "Steps per Update (default = 1) : " << std::endl
               << " > ";
     std::cin >> steps;
+    bool manual = false;
+    std::cout << "Automatic (1) or Manual (0) mode  (default = 1) : " << std::endl
+              << " > ";
+    std::cin >> manual;
+
+    #if manual 
+    #define wait std::cin;
+    #else 
+    #define wait std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    #endif
 
     RECT ConsoleRect;
-    unsigned consoleWidth = 16*g.getWidth()+60;
-    unsigned consoleHeight = 16*g.getHeight()+75+50;
+    unsigned consoleWidth = 16*g->getWidth()+60;
+    unsigned consoleHeight = 16*g->getHeight()+75+50;
 
     GetWindowRect(console, &ConsoleRect);
     MoveWindow(console, ConsoleRect.left, ConsoleRect.top, consoleWidth, consoleHeight, FALSE);
@@ -48,21 +60,21 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
         GetWindowRect(console, &ConsoleRect);
         if(ConsoleRect.right-ConsoleRect.left != consoleWidth){
             consoleWidth = ConsoleRect.right-ConsoleRect.left;
-            g.setWidth((consoleWidth-60)/16);
+            g->setWidth((consoleWidth-60)/16);
         }
         if(ConsoleRect.bottom-ConsoleRect.top != consoleHeight){
             consoleHeight = ConsoleRect.bottom-ConsoleRect.top;
-            g.setHeight((consoleHeight-75-50)/16);
+            g->setHeight((consoleHeight-75-50)/16);
         }
 
-        g.displayGrid();
+        g->displayGrid();
         for(unsigned i = 0; i < steps; i++){
-            g.generateNextGrid();
+            g->generateNextGrid();
         }
         std::cout << " Epoch : " << steps * epoch++;
         std::cout << std::endl;
         std::cout << " Ctrl + C to EXIT " ;
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        wait
         system("cls");
     }
     
